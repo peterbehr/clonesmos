@@ -12,32 +12,32 @@ function init() {
     camera.position.z = 1000;
     scene.add( camera );
 
-    geometry = new THREE.CubeGeometry( 200, 200, 200 );
-    material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-
-    mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
-
-    renderer = new THREE.CanvasRenderer();
+    var clones = [];
+    clones.push(new Clone());
+    clones.push((new Clone()).radius(100));
+    for (var i = 0; i < clones.length; i++) {
+        var clone = clones[i];
+        console.log(clone);
+        var geometry = new THREE.SphereGeometry(clone.r, clone.segmentsX, clone.segmentsY);
+        var material = new THREE.MeshBasicMaterial({ color: clone.color, wireframe: clone.wireframe });
+        var mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+    }
+    
+    renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     document.body.appendChild( renderer.domElement );
-
 }
 
 function animate() {
-
     // note: three.js includes requestAnimationFrame shim
     requestAnimationFrame( animate );
     render();
-
 }
 
 function render() {
-
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.02;
-
+    // mesh.rotation.x += 0.01;
+    // mesh.rotation.y += 0.02;
     renderer.render( scene, camera );
-
 }
