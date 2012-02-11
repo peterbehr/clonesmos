@@ -1,16 +1,56 @@
-var Clone = function (r, segmentsX, segmentsY, color, wireframe) {
-    this.r = r || 500;
-    this.segmentsX = segmentsX || 100;
-    this.segmentsY = segmentsY || 100;
-    this.color = color || 0xccaa00;
-    this.wireframe = wireframe || true;
-}
+var Clone = function (radius, segsX, segsY, color, isWire) {
+    this._radius = radius || 500;
+    this._segsX = segsX || 100;
+    this._segsY = segsY || 100;
+    this._color = color || 0xccaa00;
+    this._isWire = isWire || true;
+};
 
-Clone.prototype.radius = function (r) {
-    if (typeof(r) === 'undefined') {
-        return this.r;
+//ACCESSOR METHODS
+
+Clone.prototype.radius = function (radius) {
+    if (typeof(radius) === 'undefined') {
+        return this._radius;
     } else {
-        this.r = r;
+        this._radius = radius;
         return this;
     }
-}
+};
+
+Clone.prototype.segsX = function (segsX) {
+    if (typeof(segsX) === 'undefined') {
+        return this._segsX;
+    } else {
+        this._segsX = segsX;
+        return this;
+    }
+};
+
+Clone.prototype.segsY = function (segsY) {
+    if (typeof(segsY) === 'undefined') {
+        return this._segsY;
+    } else {
+        this._segsY = segsY;
+        return this;
+    }
+};
+
+Clone.prototype.color = function (color) {
+    if (typeof(color) === 'undefined') {
+        return this._color;
+    } else {
+        this._color = color;
+        return this;
+    }
+};
+
+Clone.prototype.isWire = function (isWire) {
+    if (typeof(isWire) === 'undefined') {
+        return this._isWire;
+    } else {
+        this._isWire = isWire;
+        return this;
+    }
+};
+
+

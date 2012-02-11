@@ -18,8 +18,8 @@ function init() {
     for (var i = 0; i < clones.length; i++) {
         var clone = clones[i];
         console.log(clone);
-        var geometry = new THREE.SphereGeometry(clone.r, clone.segmentsX, clone.segmentsY);
-        var material = new THREE.MeshBasicMaterial({ color: clone.color, wireframe: clone.wireframe });
+        var geometry = new THREE.SphereGeometry(clone.radius(), clone.segsX(), clone.segsY());
+        var material = new THREE.MeshBasicMaterial({ color: clone.color(), wireframe: clone.isWire() });
         var mesh = new THREE.Mesh( geometry, material );
         scene.add( mesh );
     }
