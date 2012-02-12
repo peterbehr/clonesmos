@@ -1,10 +1,50 @@
 var camera, scene, renderer,
 geometry, material, mesh;
 
+var props = {
+    isMouseDown : false,
+    dragStartX  : null,
+    dragStartY  : null
+};
+
+
 init();
 animate();
 
+function preparekeyboardAndMouse() {
+    $(document).mousedown(function(e) {
+        if(e.button !== 0) {
+            //only set drag bindings on first mouse click
+            //later add right click to move objects
+            return;
+        }
+
+        e.preventDefault();
+        props.isMouseDown = true;
+        props.dragStartX = e.pageX;
+        props.dragStartY = e.pageY;
+
+        //update camera as we move
+        var updateCamera = function(event) {
+            camera.translateX(props.dragStartX - event.pageX);
+            camera.translateY(event.pageY - props.dragStartY);
+            props.dragStartX = event.pageX;
+            props.dragStartY = event.pageY;
+        };
+        $(document).bind('mousemove', updateCamera);
+    });
+
+    $(document).mouseup(function(e) {
+        e.preventDefault();
+        props.isMouseDown = false;
+
+        $(document).unbind('mousemove');
+    });
+}
+
 function init() {
+
+    preparekeyboardAndMouse();
 
     scene = new THREE.Scene();
 
