@@ -12,6 +12,15 @@ var props = {
 var clone1;
 var clone2;
 
+//print matrix
+var pm = function(m) {
+    console.log(m.n11 + " " + m.n12 + " " + m.n13 + " " + m.n14);
+    console.log(m.n21 + " " + m.n22 + " " + m.n23 + " " + m.n24);
+    console.log(m.n31 + " " + m.n32 + " " + m.n33 + " " + m.n34);
+    console.log(m.n41 + " " + m.n42 + " " + m.n43 + " " + m.n44);
+};
+
+
 $(function () {
 
 init();
@@ -68,26 +77,39 @@ function preparekeyboardAndMouse() {
     var origin = new THREE.Vector3(0, 0, 0);
     
     var updateCameraZenith = function (angle) {
-        // change y and z
-        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
-        console.log(r);
-        console.log(r * Math.sin(angle));
-        console.log(r * Math.cos(angle));
-        
-        camera.translateY(r*(Math.sin(angle)));
-        camera.translateZ(r*(Math.cos(angle)-1));
-        updateCameraDirection(origin);
+        var distance = camera.position.distanceTo(clone1._mesh.position);
+
+        //move to center
+        camera.position.copy(clone1._mesh.position);
+
+        //rotate in object local space
+        camera.matrix.rotateX(0.1);
+
+        //rotate in object local space
+        camera.rotation.setRotationFromMatrix(camera.matrix);
+
+        //move back following the camera look vector
+        //var normV = camera.rotation.clone().normalize();
+        //var moveVector = camera.rotation.clone().normalize().multiplyScalar(-distance);
+        //camera.position.addSelf(moveVector);
     };
+
     var updateCameraAzimuth = function (angle) {
-        // change y and z
-        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
-        console.log(r);
-        console.log(r * Math.sin(angle));
-        console.log(r * Math.cos(angle));
-        
-        camera.translateX(-r*(Math.sin(angle)));
-        camera.translateZ(r*(Math.cos(angle)-1));
-        updateCameraDirection(origin);
+        var distance = camera.position.distanceTo(clone1._mesh.position);
+
+        //move to center
+        camera.position.copy(clone1._mesh.position);
+
+        //rotate in object local space
+        camera.matrix.rotateY(0.1);
+
+        //rotate in object local space
+        camera.rotation.setRotationFromMatrix(camera.matrix);
+
+        //move back following the camera look vector
+        //var normV = camera.rotation.clone().normalize();
+        //var moveVector = camera.rotation.clone().normalize().multiplyScalar(-distance);
+        //camera.position.addSelf(moveVector);
     };
     
     var updateCameraDirection = function (target) {
@@ -102,8 +124,6 @@ function preparekeyboardAndMouse() {
         updateCameraDirection(origin);
     });
 }
-
-
 
 function init() {
 
@@ -120,7 +140,6 @@ function init() {
     clone2._mesh.translateX(500);
     scene.add(clone1._mesh);
     scene.add(clone2._mesh);
-    clone2.isWire(false);
     
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
