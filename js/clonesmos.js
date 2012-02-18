@@ -1,8 +1,8 @@
-$(function () {
-
 var camera, scene, renderer,
 geometry, material, mesh;
+
 var props = {
+    ticks       : 0,
     isMouseDown : false,
     dragStartX  : null,
     dragStartY  : null
@@ -11,6 +11,8 @@ var props = {
 //global for debug
 var clone1;
 var clone2;
+
+$(function () {
 
 init();
 animate();
@@ -77,15 +79,22 @@ function init() {
     document.body.appendChild( renderer.domElement );
 }
 
+function updateTime() {
+    props.ticks += 1;
+}
+
+function moveClones() {
+}
+
 function animate() {
-    // note: three.js includes requestAnimationFrame shim
+    updateTime();
+    moveClones();
+
     requestAnimationFrame( animate );
     render();
 }
 
 function render() {
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.02;
     renderer.render( scene, camera );
 }
 
@@ -93,6 +102,6 @@ function render() {
 // ughghghgh
 Object.prototype.echo = function () {
     console.log(this);
-}
+};
 
 });

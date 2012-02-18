@@ -8,6 +8,9 @@ var Clone = function (radius, segsX, segsY, color, isWire) {
     //need to first value for scaling
     this._radius_orig = this._radius;
 
+    //for physics
+    this.velocity = new THREE.Vector3(0,0,0);
+
     //THREEJS properties not accessors, we don't want these to update
     this._geometry = new THREE.SphereGeometry(this._radius, this._segsX, this._segsY);
     this._material = new THREE.MeshBasicMaterial({ color: this._color, wireframe: this._isWire });
@@ -66,6 +69,11 @@ Clone.prototype.isWire = function(isWire) {
     this.recalculateMesh();
     scene.add(this._mesh);
 
+    return this;
+};
+
+Clone.prototype.velocity = function(x,y,z) {
+    this.velocity = new THREE.Vector3(x,y,z);
     return this;
 };
 
