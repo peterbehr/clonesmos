@@ -1,5 +1,3 @@
-$(function () {
-
 var camera, scene, renderer,
 geometry, material, mesh;
 var props = {
@@ -11,6 +9,8 @@ var props = {
 //global for debug
 var clone1;
 var clone2;
+
+$(function () {
 
 init();
 animate();
@@ -57,20 +57,34 @@ function preparekeyboardAndMouse() {
     $(document).bind('keyup', 'down', function () {
         updateCameraZenith(-0.1);
     });
+    $(document).bind('keyup', 'left', function () {
+        updateCameraAzimuth(0.1);
+    });
+    $(document).bind('keyup', 'right', function () {
+        updateCameraAzimuth(-0.1);
+    });
     var origin = new THREE.Vector3(0, 0, 0);
     
     var updateCameraZenith = function (angle) {
-        // change y
+        // change y and z
         var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
         console.log(r);
         console.log(r * Math.sin(angle));
         console.log(r * Math.cos(angle));
         
-        camera.translateY(-r*(Math.sin(angle)));
+        camera.translateY(r*(Math.sin(angle)));
         camera.translateZ(r*(Math.cos(angle)-1));
         updateCameraDirection(origin);
     };
     var updateCameraAzimuth = function (angle) {
+        // change y and z
+        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
+        console.log(r);
+        console.log(r * Math.sin(angle));
+        console.log(r * Math.cos(angle));
+        
+        camera.translateX(-r*(Math.sin(angle)));
+        camera.translateZ(r*(Math.cos(angle)-1));
         updateCameraDirection(origin);
     };
     
@@ -102,9 +116,9 @@ function init() {
     clone1 = new Clone();
     clone2 = new Clone().radius(100);
     clone2._mesh.translateX(500);
-
     scene.add(clone1._mesh);
     scene.add(clone2._mesh);
+    clone2.isWire(false);
     
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
