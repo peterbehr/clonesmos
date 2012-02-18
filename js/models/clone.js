@@ -1,3 +1,4 @@
+
 var Clone = function (radius, segsX, segsY, color, isWire) {
     this._radius = radius || 100;
     this._segsX  = segsX || 50;

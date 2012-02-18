@@ -141,7 +141,6 @@ function init() {
         this.origin = target;
         this.lookAt(origin);
     };
-    
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
     pointLight = new THREE.PointLight(0xffffff);
@@ -151,12 +150,53 @@ function init() {
     scene.add(camera);
     scene.add(ambientLight);
     scene.add(pointLight);
+    var material = new THREE.ParticleBasicMaterial( { map: new THREE.Texture( generateSprite() ), blending: THREE.AdditiveBlending } );
+    for (var i = 0; i < 1; i++) {
+        particle = new THREE.Particle(material);
+        scene.add(particle);
+    }
+    function generateSprite() {
+        var canvas = document.createElement( 'canvas' );
+        canvas.width = 16;
+        canvas.height = 16;
+        var context = canvas.getContext( '2d' );
+        var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+        gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
+        gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
+        gradient.addColorStop( 0.4, 'rgba(0,0,64,1)' );
+        gradient.addColorStop( 1, 'rgba(0,0,0,1)' );
+        
+        context.fillStyle = gradient;
+        context.fillRect( 0, 0, canvas.width, canvas.height );
+        
+        return canvas;
+    }
     clone1 = new Clone();
     clone2 = new Clone().radius(50);
-    clone2._mesh.translateX(100);
-    clone2._mesh.translateZ(100);
+    clone2._mesh.translateX(150);
+    clone2._mesh.translateZ(150);
     scene.add(clone1._mesh);
     scene.add(clone2._mesh);
+    var particleColor = new THREE.Color();
+    particleColor.setHSV(Math.random(), 1.0, 1.0);
+    var particleGeometry = new THREE.Geometry();
+    var particleColors = [];
+    var particleMaterial =new THREE.ParticleBasicMaterial({
+            map: THREE.ImageUtils.loadTexture('images/particle.png'),
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            transparent: false,
+            vertexColors: true, //allows 1 color per particle
+            size: 1000,
+            opacity: 1
+    });
+    var vector = new THREE.Vector3(0, 0, 0);
+    var particle = new THREE.Vertex(vector);
+    particleGeometry.vertices.push(particle);
+    particleColors.push(particleColor);
+    particleGeometry.colors = particleColors;
+    var particleSystem = new THREE.ParticleSystem(particleGeometry, particleMaterial);
+    scene.addObject(particleSystem);
     camera.updateRho(500);
     camera.sphericalToRectangular();
     renderer = new THREE.WebGLRenderer();
