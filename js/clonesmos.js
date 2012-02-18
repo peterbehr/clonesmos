@@ -5,7 +5,6 @@ var props = {
     dragStartX  : null,
     dragStartY  : null
 };
-
 //global for debug
 var clone1;
 var clone2;
@@ -22,12 +21,12 @@ function preparekeyboardAndMouse() {
             //later add right click to move objects
             return;
         }
-
+        
         e.preventDefault();
         props.isMouseDown = true;
         props.dragStartX = e.pageX;
         props.dragStartY = e.pageY;
-
+        
         //update camera as we move
         var updateCamera = function(event) {
             camera.translateX(props.dragStartX - event.pageX);
@@ -37,92 +36,110 @@ function preparekeyboardAndMouse() {
         };
         $(document).bind('mousemove', updateCamera);
     });
-
+    
     $(document).mouseup(function(e) {
         e.preventDefault();
         props.isMouseDown = false;
-
         $(document).unbind('mousemove');
     });
     
-    $(document).bind('keyup', 'a', function () {
-        camera.position.z += 10;
-    });
-    $(document).bind('keyup', 's', function () {
-        camera.position.z -= 10;
-    });
-    $(document).bind('keyup', 'up', function () {
-        updateCameraZenith(0.1);
-    });
-    $(document).bind('keyup', 'down', function () {
-        updateCameraZenith(-0.1);
-    });
-    $(document).bind('keyup', 'left', function () {
-        updateCameraAzimuth(0.1);
-    });
-    $(document).bind('keyup', 'right', function () {
-        updateCameraAzimuth(-0.1);
-    });
-    var origin = new THREE.Vector3(0, 0, 0);
-    
-    var updateCameraZenith = function (angle) {
-        // change y and z
-        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
-        console.log(r);
-        console.log(r * Math.sin(angle));
-        console.log(r * Math.cos(angle));
-        
-        camera.translateY(r*(Math.sin(angle)));
-        camera.translateZ(r*(Math.cos(angle)-1));
+    var updateCameraRadius = function (distance) {
+        // add to radius
+        camera.radius += distance;
+        camera.position = camera.sphericalToRectangular();
         updateCameraDirection(origin);
     };
-    var updateCameraAzimuth = function (angle) {
-        // change y and z
-        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
-        console.log(r);
-        console.log(r * Math.sin(angle));
-        console.log(r * Math.cos(angle));
-        
-        camera.translateX(-r*(Math.sin(angle)));
-        camera.translateZ(r*(Math.cos(angle)-1));
+    var updateCameraTheta = function (angle) {
+        // change theta
+        camera.theta += angle;
+        camera.position = camera.sphericalToRectangular();
         updateCameraDirection(origin);
     };
-    
+    var updateCameraPhi = function (angle) {
+        // change phi
+        camera.phi += angle;
+        camera.position = camera.sphericalToRectangular();
+        updateCameraDirection(origin);
+    };
     var updateCameraDirection = function (target) {
-        console.log();
         camera.lookAt(target);
     };
     var spot = new THREE.Vector3(200, 200, 200);
+    var origin = new THREE.Vector3(0,0,0);
+    $(document).bind('keyup', 'a', function () {
+        updateCameraRadius(10);
+    });
+    $(document).bind('keyup', 's', function () {
+        updateCameraRadius(-10);
+    });
+    $(document).bind('keyup', 'up', function () {
+        updateCameraPhi(0.1);
+    });
+    $(document).bind('keyup', 'down', function () {
+        updateCameraPhi(-0.1);
+    });
+    $(document).bind('keyup', 'left', function () {
+        updateCameraTheta(0.1);
+    });
+    $(document).bind('keyup', 'right', function () {
+        updateCameraTheta(-0.1);
+    });
     $(document).bind('keyup', '0', function () {
         updateCameraDirection(spot);
     });
     $(document).bind('keyup', '1', function () {
         updateCameraDirection(origin);
     });
+    $(document).bind('keyup', '2', function () {
+        console.log(camera.rotation);
+    });
+    $(document).bind('keyup', '3', function () {
+        camera.position.x = 200;
+        camera.position.y = 200;
+        camera.translateX(200);
+        console.log(camera.position);
+        
+    });
 }
 
 
 
 function init() {
-
+    THREE.PerspectiveCamera.prototype.origin = new THREE.Vector3(0, 0, 0);
+    THREE.PerspectiveCamera.prototype.theta = 0;
+    THREE.PerspectiveCamera.prototype.setTheta = function () {};
+    THREE.PerspectiveCamera.prototype.phi = 0;
+    THREE.PerspectiveCamera.prototype.setPhi = function () {};
+    THREE.PerspectiveCamera.prototype.radius = 0;
+    THREE.PerspectiveCamera.prototype.setRadius = function () {};
+    THREE.PerspectiveCamera.prototype.sphericalToRectangular = function () {
+        var x = (this.radius * Math.cos(this.phi) * Math.sin(this.theta));
+        var y = (this.radius * Math.sin(this.phi) * Math.sin(this.theta));
+        var z = (this.radius * Math.cos(this.theta));
+        console.log(x, y, z);
+        var vector = new THREE.Vector3(x, y, z);
+        return vector;
+    };
+    THREE.PerspectiveCamera.prototype.observe = function (target) {
+        //console.log(this);
+        this.origin = target;
+        this.lookAt(origin);
+    };
+    
     preparekeyboardAndMouse();
-
     scene = new THREE.Scene();
-
     camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = 1000;
-    scene.add( camera );
-
+    scene.add(camera);
+    
     clone1 = new Clone();
     clone2 = new Clone().radius(100);
-    clone2._mesh.translateX(500);
+    clone2._mesh.translateX(200);
     scene.add(clone1._mesh);
     scene.add(clone2._mesh);
-    clone2.isWire(false);
     
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
-
+    
     document.body.appendChild( renderer.domElement );
 }
 
