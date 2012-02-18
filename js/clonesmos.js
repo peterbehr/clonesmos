@@ -4,9 +4,10 @@ var props = {
     isMouseDown : false,
     dragStartX  : null,
     dragStartY  : null,
-    multitude: 20,
+    multitude: 70,
     w: window.innerWidth,
-    h: window.innerHeight
+    h: window.innerHeight,
+    padding: 0 // this doesn't really do what i want it too
 };
 //global for debug
 var clone1;
@@ -160,58 +161,62 @@ function init() {
     scene.add(pointLight2);
     scene.add(pointLight);
     
-    // we need to generate some quantity of position vectors
-    // then populate those points with spheres and particles
-    
-    props.centers = [];
-    props.colors = [];
-    props.spheres = [];
-    props.particles = [];
-    props.radii = [];
-    for (var i = 0; i < props.multitude; i++) {
-        console.log(props);
-        var center = new THREE.Vector3(props.w*(1-2*Math.random())/2, props.h*(1-2*Math.random())/2, props.h*(1-2*Math.random())/2);
-        props.centers.push(center);
-        var color = new THREE.Color();
-        color.setHSV(Math.random(), 1.0, 1.0);
-        props.colors.push(color);
-        var radius = (Math.random() * 20)+10;
-        var clone = new Clone().radius(radius);
-        props.radii.push(radius);
-        clone.color(color);
-        clone._mesh.position = center;
-        props.spheres.push(clone);
-        scene.add(clone._mesh);
-        
-    }
-    console.log(props.centers);
-    
-    // clone1 = new Clone();
-    // clone2 = new Clone().radius(50);
-    // clone2._mesh.translateX(150);
-    // clone2._mesh.translateZ(150);
-    // //scene.add(clone1._mesh);
-    // scene.add(clone2._mesh);
-    var particleColor = new THREE.Color();
-    particleColor.setHSV(Math.random(), 1.0, 1.0);
     var particleGeometry = new THREE.Geometry();
-    var particleColors = [];
+    var particleGeometryOuter = new THREE.Geometry();
+    var particleMaterialOuter = new THREE.ParticleBasicMaterial({
+            map: THREE.ImageUtils.loadTexture('images/particle.png'),
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            transparent: true,
+            vertexColors: true, //allows 1 color per particle
+            size: 500,
+            opacity: 0.7
+    });
     var particleMaterial = new THREE.ParticleBasicMaterial({
             map: THREE.ImageUtils.loadTexture('images/particle.png'),
             blending: THREE.AdditiveBlending,
             depthTest: false,
             transparent: false,
             vertexColors: true, //allows 1 color per particle
-            size: 1000,
+            size: 100,
             opacity: 1
     });
-    var vector = new THREE.Vector3(0, 0, 0);
-    var particle = new THREE.Vertex(vector);
-    particleGeometry.vertices.push(particle);
-    particleColors.push(particleColor);
-    particleGeometry.colors = particleColors;
+    
+    // we need to generate some quantity of position vectors
+    // then populate those points with spheres and particles
+    
+    props.centers = [];
+    props.colors = [];
+    props.yellows = [];
+    props.spheres = [];
+    props.particles = [];
+    props.radii = [];
+    for (var i = 0; i < props.multitude; i++) {
+        var center = new THREE.Vector3((props.w*(1-2*Math.random())/2.2)-props.padding, (props.h*(1-2*Math.random())/2.2)-props.padding, (props.h*(1-2*Math.random())/2.2)-props.padding);
+        props.centers.push(center);
+        var color = new THREE.Color();
+        props.yellows.push(new THREE.Color(0xfaff3b));
+        color.setHSV(Math.random(), 1.0, 1.0);
+        props.colors.push(color);
+        var radius = (Math.random() * 50)+10;
+        var clone = new Clone().radius(radius);
+        props.radii.push(radius);
+        clone.color(color);
+        clone._mesh.position = center;
+        props.spheres.push(clone);
+        scene.add(clone._mesh);
+        var vertex = new THREE.Vertex(center);
+        props.particles.push(vertex);
+        particleGeometry.vertices.push(vertex);
+        particleGeometryOuter.vertices.push(vertex);
+    }
+
+    particleGeometryOuter.colors = props.colors;
+    var particleSystemOuter = new THREE.ParticleSystem(particleGeometryOuter, particleMaterialOuter);
+    particleGeometry.colors = props.yellows;
     var particleSystem = new THREE.ParticleSystem(particleGeometry, particleMaterial);
     scene.addObject(particleSystem);
+    scene.addObject(particleSystemOuter);
     camera.updateRho(500);
     camera.sphericalToRectangular();
     renderer = new THREE.WebGLRenderer();
