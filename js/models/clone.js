@@ -1,7 +1,7 @@
 var Clone = function (radius, segsX, segsY, color, isWire) {
-    this._radius = radius || 50;
-    this._segsX  = segsX || 10;
-    this._segsY  = segsY || 10;
+    this._radius = radius || 100;
+    this._segsX  = segsX || 50;
+    this._segsY  = segsY || 50;
     this._color  = color || 0xccaa00;
     this._isWire = isWire || true;
 
