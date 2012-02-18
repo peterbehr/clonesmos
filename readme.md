@@ -12,6 +12,11 @@
 
 # resources
 
-http://www.aerotwist.com/lab/getting-started-with-three-js/
+http://threejsdoc.appspot.com/doc/index.html
 https://github.com/mrdoob/three.js/wiki/API-Reference
+
+http://www.aerotwist.com/lab/getting-started-with-three-js/
+http://aerotwist.com/tutorials/creating-particles-with-three-js/
+
 http://www.chromeexperiments.com/globe
+http://www.hemispheregames.com/osmos/
