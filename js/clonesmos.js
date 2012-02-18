@@ -150,27 +150,10 @@ function init() {
     scene.add(camera);
     scene.add(ambientLight);
     scene.add(pointLight);
-    var material = new THREE.ParticleBasicMaterial( { map: new THREE.Texture( generateSprite() ), blending: THREE.AdditiveBlending } );
-    for (var i = 0; i < 1; i++) {
-        particle = new THREE.Particle(material);
-        scene.add(particle);
-    }
-    function generateSprite() {
-        var canvas = document.createElement( 'canvas' );
-        canvas.width = 16;
-        canvas.height = 16;
-        var context = canvas.getContext( '2d' );
-        var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
-        gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
-        gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
-        gradient.addColorStop( 0.4, 'rgba(0,0,64,1)' );
-        gradient.addColorStop( 1, 'rgba(0,0,0,1)' );
-        
-        context.fillStyle = gradient;
-        context.fillRect( 0, 0, canvas.width, canvas.height );
-        
-        return canvas;
-    }
+    
+    // we need to generate some quantity of position vectors
+    // then populate those points with spheres and particles
+    
     clone1 = new Clone();
     clone2 = new Clone().radius(50);
     clone2._mesh.translateX(150);
