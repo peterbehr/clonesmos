@@ -13,7 +13,7 @@ var Clone = function (radius, segsX, segsY, color, isWire) {
     //THREEJS properties not accessors, we don't want these to update
     this._geometry = new THREE.SphereGeometry(this._radius, this._segsX, this._segsY);
     // this._material = new THREE.MeshBasicMaterial({ color: this._color, wireframe: this._isWire });
-    this._material = new THREE.MeshLambertMaterial({ color: this._color, opacity: this._opacity, transparent: true });
+    this._material = new THREE.MeshLambertMaterial({ color: this._color, ambient: 0x444444, opacity: this._opacity, transparent: true });
     this._mesh = new THREE.Mesh(this._geometry, this._material);
 
 };
@@ -58,7 +58,7 @@ Clone.prototype.segsY  = function(segsY) {
 
 Clone.prototype.color = function(color) {
     this._color = color;
-    this._material.color = new THREE.Color(color);
+    this._material.color = color;
     return this;
 };
 

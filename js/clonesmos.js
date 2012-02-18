@@ -3,7 +3,10 @@ geometry, material, mesh, pointLight, ambientLight;
 var props = {
     isMouseDown : false,
     dragStartX  : null,
-    dragStartY  : null
+    dragStartY  : null,
+    multitude: 20,
+    w: window.innerWidth,
+    h: window.innerHeight
 };
 //global for debug
 var clone1;
@@ -137,34 +140,63 @@ function init() {
         this.position = vector;
     };
     THREE.PerspectiveCamera.prototype.observe = function (target) {
-        //console.log(this);
+        // console.log(this);
         this.origin = target;
         this.lookAt(origin);
     };
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
     pointLight = new THREE.PointLight(0xffffff);
+    var pointLight2 = new THREE.PointLight(0xffffff);
     ambientLight = new THREE.AmbientLight(0xffffff);
     pointLight.position.x = 500;
     pointLight.position.y = 500;
+    pointLight2.position.x = -500;
+    pointLight2.position.y = -500;
+    pointLight2.position.z = 100;
+    
     scene.add(camera);
     scene.add(ambientLight);
+    scene.add(pointLight2);
     scene.add(pointLight);
     
     // we need to generate some quantity of position vectors
     // then populate those points with spheres and particles
     
-    clone1 = new Clone();
-    clone2 = new Clone().radius(50);
-    clone2._mesh.translateX(150);
-    clone2._mesh.translateZ(150);
-    scene.add(clone1._mesh);
-    scene.add(clone2._mesh);
+    props.centers = [];
+    props.colors = [];
+    props.spheres = [];
+    props.particles = [];
+    props.radii = [];
+    for (var i = 0; i < props.multitude; i++) {
+        console.log(props);
+        var center = new THREE.Vector3(props.w*(1-2*Math.random())/2, props.h*(1-2*Math.random())/2, props.h*(1-2*Math.random())/2);
+        props.centers.push(center);
+        var color = new THREE.Color();
+        color.setHSV(Math.random(), 1.0, 1.0);
+        props.colors.push(color);
+        var radius = (Math.random() * 20)+10;
+        var clone = new Clone().radius(radius);
+        props.radii.push(radius);
+        clone.color(color);
+        clone._mesh.position = center;
+        props.spheres.push(clone);
+        scene.add(clone._mesh);
+        
+    }
+    console.log(props.centers);
+    
+    // clone1 = new Clone();
+    // clone2 = new Clone().radius(50);
+    // clone2._mesh.translateX(150);
+    // clone2._mesh.translateZ(150);
+    // //scene.add(clone1._mesh);
+    // scene.add(clone2._mesh);
     var particleColor = new THREE.Color();
     particleColor.setHSV(Math.random(), 1.0, 1.0);
     var particleGeometry = new THREE.Geometry();
     var particleColors = [];
-    var particleMaterial =new THREE.ParticleBasicMaterial({
+    var particleMaterial = new THREE.ParticleBasicMaterial({
             map: THREE.ImageUtils.loadTexture('images/particle.png'),
             blending: THREE.AdditiveBlending,
             depthTest: false,
@@ -183,7 +215,7 @@ function init() {
     camera.updateRho(500);
     camera.sphericalToRectangular();
     renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(props.w, props.h);
     document.body.appendChild(renderer.domElement);
 }
 
