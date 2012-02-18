@@ -56,12 +56,7 @@ function init() {
     clones.push(new Clone());
     clones.push((new Clone()).radius(100));
     for (var i = 0; i < clones.length; i++) {
-        var clone = clones[i];
-        console.log(clone);
-        var geometry = new THREE.SphereGeometry(clone.radius(), clone.segsX(), clone.segsY());
-        var material = new THREE.MeshBasicMaterial({ color: clone.color(), wireframe: clone.isWire() });
-        var mesh = new THREE.Mesh( geometry, material );
-        scene.add( mesh );
+        scene.add(clones[i]._mesh);
     }
     
     renderer = new THREE.WebGLRenderer();
