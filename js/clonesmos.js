@@ -129,7 +129,7 @@ function init() {
     preparekeyboardAndMouse();
     
     THREE.PerspectiveCamera.prototype.origin = new THREE.Vector3(0, 0, 0);
-    THREE.PerspectiveCamera.prototype.theta = 0;
+    THREE.PerspectiveCamera.prototype.theta = (Math.PI / 2);
     THREE.PerspectiveCamera.prototype.updateTheta = function (delta) {
         this.theta = (this.theta + delta) % (2*Math.PI);
     };
@@ -138,23 +138,24 @@ function init() {
         this.phi += delta;
     };
     THREE.PerspectiveCamera.prototype.getPhi = function () {
-        if ((this.phi % (2*Math.PI)) < Math.PI) {
-            return (this.phi % (2*Math.PI));
+        var culprit = this.phi % (2*Math.PI);
+        if ((culprit > (Math.PI / 2)) && (culprit < (3* Math.PI / 2))) {
+            return -this.phi;
         } else {
-            return -(this.phi % (2*Math.PI));
+            return this.phi;
         }
     };
     THREE.PerspectiveCamera.prototype.rho = 0;
     THREE.PerspectiveCamera.prototype.updateRho = function (delta) {
         this.rho += delta;
-        console.log(this.rho);
+        //console.log(this.rho);
     };
     THREE.PerspectiveCamera.prototype.sphericalToRectangular = function () {
         var x = (this.rho * Math.cos(this.theta) * Math.sin(this.getPhi()));
         var y = (this.rho * Math.sin(this.getPhi()) * Math.sin(this.theta));
         var z = (this.rho * Math.cos(this.getPhi()));
-        console.log("rect", x, y, z);
-        console.log("sphere", this.rho, this.getPhi(), this.theta);
+        //console.log("sphere", this.rho, this.getPhi(), this.theta);
+        //console.log("rect", x, y, z);
         var vector = new THREE.Vector3(x, y, z);
         this.position = vector;
     };
