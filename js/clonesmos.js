@@ -7,6 +7,9 @@ var props = {
     dragStartY  : null
 };
 
+//global for debug
+var clone1;
+var clone2;
 
 init();
 animate();
@@ -48,16 +51,16 @@ function init() {
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
     camera.position.z = 1000;
     scene.add( camera );
 
-    var clones = [];
-    clones.push(new Clone());
-    clones.push((new Clone()).radius(100));
-    for (var i = 0; i < clones.length; i++) {
-        scene.add(clones[i]._mesh);
-    }
+    clone1 = new Clone();
+    clone2 = new Clone().radius(100);
+    clone2._mesh.translateX(500);
+
+    scene.add(clone1._mesh);
+    scene.add(clone2._mesh);
     
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );

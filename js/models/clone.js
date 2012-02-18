@@ -5,6 +5,9 @@ var Clone = function (radius, segsX, segsY, color, isWire) {
     this._color  = color || 0xccaa00;
     this._isWire = isWire || true;
 
+    //need to first value for scaling
+    this._radius_orig = this._radius;
+
     //THREEJS properties not accessors, we don't want these to update
     this._geometry = new THREE.SphereGeometry(this._radius, this._segsX, this._segsY);
     this._material = new THREE.MeshBasicMaterial({ color: this._color, wireframe: this._isWire });
@@ -12,34 +15,57 @@ var Clone = function (radius, segsX, segsY, color, isWire) {
 };
 
 /**************************ACCESSORS**************************/
+
+//Radius actually just scales for efficiency, no need to remove from scene and create new.
 Clone.prototype.radius = function(radius) {
     this._radius = radius;
-    this._mesh.geometry = this.recalculateGeometry();
+
+    var rorig = this._radius_orig;
+    var scale = (rorig === 0) ? 0 : (radius / rorig);
+
+    this._mesh.scale = new THREE.Vector3(scale, scale, scale);
     return this;
 };
 
 
+//this actually removes and adds mesh, NOT GOOD FOR PRODUCTIONS
 Clone.prototype.segsX  = function(segsX) {
     this._segsX = segsX;
-    this._mesh.geometry = this.recalculateGeometry();
+
+    scene.remove(this._mesh);
+    this.recalculateGeometry();
+    this.recalculateMesh();
+    scene.add(this._mesh);
+
     return this;
 };
 
+//this actually removes and adds mesh, NOT GOOD FOR PRODUCTIONS
 Clone.prototype.segsY  = function(segsY) {
     this._segsY = segsY;
-    this._mesh.geometry = this.recalculateGeometry();
+
+    scene.remove(this._mesh);
+    this.recalculateGeometry();
+    this.recalculateMesh();
+    scene.add(this._mesh);
+
     return this;
 };
 
 Clone.prototype.color = function(color) {
     this._color = color;
-    this._mesh.color = this.recalculateMaterial();
+    this._material.color = new THREE.Color(color);
     return this;
 };
 
 Clone.prototype.isWire = function(isWire) {
     this._isWire = isWire;
-    this._mesh.isWire = this.recalculateMaterial();
+
+    scene.remove(this._mesh);
+    this.recalculateMaterial();
+    this.recalculateMesh();
+    scene.add(this._mesh);
+
     return this;
 };
 
