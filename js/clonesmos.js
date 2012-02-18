@@ -1,12 +1,12 @@
+$(function () {
+
 var camera, scene, renderer,
 geometry, material, mesh;
-
 var props = {
     isMouseDown : false,
     dragStartX  : null,
     dragStartY  : null
 };
-
 
 init();
 animate();
@@ -81,3 +81,5 @@ function render() {
     // mesh.rotation.y += 0.02;
     renderer.render( scene, camera );
 }
+
+});
