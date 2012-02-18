@@ -41,10 +41,10 @@ function preparekeyboardAndMouse() {
         $(document).unbind('mousemove');
     });
     
-    $(document).bind('keypress', 'down', function () {
+    $(document).bind('keyup', 'down', function () {
         camera.position.z += 10;
     });
-    $(document).bind('keypress', 'up', function () {
+    $(document).bind('keyup', 'up', function () {
         camera.position.z -= 10;
     });
     
@@ -90,6 +90,8 @@ function render() {
     renderer.render( scene, camera );
 }
 
+// wouldn't it be fucking great if string and number literals had methods
+// ughghghgh
 Object.prototype.echo = function () {
     console.log(this);
 }
