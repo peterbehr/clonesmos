@@ -15,6 +15,7 @@ http://peterbehr.net
 
 html, body {
     overflow: hidden;
+    background: #333;
 }
 
 /* END elements */

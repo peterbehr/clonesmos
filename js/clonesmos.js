@@ -40,6 +40,14 @@ function preparekeyboardAndMouse() {
 
         $(document).unbind('mousemove');
     });
+    
+    $(document).bind('keypress', 'down', function () {
+        camera.position.z += 10;
+    });
+    $(document).bind('keypress', 'up', function () {
+        camera.position.z -= 10;
+    });
+    
 }
 
 function init() {
@@ -80,6 +88,10 @@ function render() {
     // mesh.rotation.x += 0.01;
     // mesh.rotation.y += 0.02;
     renderer.render( scene, camera );
+}
+
+Object.prototype.echo = function () {
+    console.log(this);
 }
 
 });
