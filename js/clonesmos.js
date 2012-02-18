@@ -41,14 +41,49 @@ function preparekeyboardAndMouse() {
         $(document).unbind('mousemove');
     });
     
-    $(document).bind('keyup', 'down', function () {
+    $(document).bind('keyup', 'a', function () {
         camera.position.z += 10;
     });
-    $(document).bind('keyup', 'up', function () {
+    $(document).bind('keyup', 's', function () {
         camera.position.z -= 10;
     });
+    $(document).bind('keyup', 'up', function () {
+        updateCameraZenith(0.1);
+    });
+    $(document).bind('keyup', 'down', function () {
+        updateCameraZenith(-0.1);
+    });
+    var origin = new THREE.Vector3(0, 0, 0);
     
+    var updateCameraZenith = function (angle) {
+        // change y
+        var r = Math.sqrt(sq(camera.position.z - origin.z) + sq(camera.position.y - origin.y) + sq(camera.position.x - origin.x));
+        console.log(r);
+        console.log(r * Math.sin(angle));
+        console.log(r * Math.cos(angle));
+        
+        camera.translateY(-r*(Math.sin(angle)));
+        camera.translateZ(r*(Math.cos(angle)-1));
+        updateCameraDirection(origin);
+    };
+    var updateCameraAzimuth = function (angle) {
+        updateCameraDirection(origin);
+    };
+    
+    var updateCameraDirection = function (target) {
+        console.log();
+        camera.lookAt(target);
+    };
+    var spot = new THREE.Vector3(200, 200, 200);
+    $(document).bind('keyup', '0', function () {
+        updateCameraDirection(spot);
+    });
+    $(document).bind('keyup', '1', function () {
+        updateCameraDirection(origin);
+    });
 }
+
+
 
 function init() {
 
@@ -94,6 +129,10 @@ function render() {
 // ughghghgh
 Object.prototype.echo = function () {
     console.log(this);
+}
+
+function sq(x) {
+    return x * x;
 }
 
 });
