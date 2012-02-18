@@ -9,3 +9,9 @@
 * ? - collision detection
 * E - optimize collision detection with many spheres, octree
 * ? - on collision, absorption
+
+# resources
+
+http://www.aerotwist.com/lab/getting-started-with-three-js/
+https://github.com/mrdoob/three.js/wiki/API-Reference
+http://www.chromeexperiments.com/globe

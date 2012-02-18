@@ -1,6 +1,7 @@
+$(function () {
+
 var camera, scene, renderer,
 geometry, material, mesh;
-
 var props = {
     isMouseDown : false,
     dragStartX  : null,
@@ -43,6 +44,14 @@ function preparekeyboardAndMouse() {
 
         $(document).unbind('mousemove');
     });
+    
+    $(document).bind('keyup', 'down', function () {
+        camera.position.z += 10;
+    });
+    $(document).bind('keyup', 'up', function () {
+        camera.position.z -= 10;
+    });
+    
 }
 
 function init() {
@@ -79,3 +88,11 @@ function render() {
     // mesh.rotation.y += 0.02;
     renderer.render( scene, camera );
 }
+
+// wouldn't it be fucking great if string and number literals had methods
+// ughghghgh
+Object.prototype.echo = function () {
+    console.log(this);
+}
+
+});
