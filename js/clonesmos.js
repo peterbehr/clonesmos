@@ -230,7 +230,7 @@ function init() {
         particleGeometry.vertices.push(vertex);
         particleGeometryOuter.vertices.push(vertex);
     }
-
+    
     particleGeometryOuter.colors = props.colors;
     var particleSystemOuter = new THREE.ParticleSystem(particleGeometryOuter, particleMaterialOuter);
     particleGeometry.colors = props.yellows;
